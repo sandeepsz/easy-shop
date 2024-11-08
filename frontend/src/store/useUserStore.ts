@@ -33,7 +33,7 @@ interface LoginCredentials {
   password: string;
 }
 
-export const useUserStore = create<AuthStore>((set, get) => ({
+export const useUserStore = create<AuthStore>((set) => ({
   user: null,
   loading: false,
   checkingAuth: true,
