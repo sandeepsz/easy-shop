@@ -12,13 +12,14 @@ import CategoryPage from "./pages/Category";
 import { useCartStore } from "./store/useCartStore";
 import CartPage from "./pages/CartPage";
 import SuccessfulPage from "./pages/SuccessfulPage";
+import OrdersPage from "./pages/OrdersPage";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, []);
   useEffect(() => {
     if (!user) return;
 
@@ -59,6 +60,7 @@ function App() {
             element={user ? <CartPage /> : <Navigate to="/login" />}
           />
           <Route path="/successful" element={<SuccessfulPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
         </Routes>
       </div>
       <Toaster />

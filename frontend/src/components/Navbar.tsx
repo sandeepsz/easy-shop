@@ -4,11 +4,11 @@ import { HiLogout } from "react-icons/hi";
 import Button from "./ui/Button";
 import { useUserStore } from "../store/useUserStore";
 import { useCartStore } from "../store/useCartStore";
+import { ListOrdered } from "lucide-react";
 
 const Navbar = () => {
-  const { user, logout } = useUserStore();
-  const isAdmin = user?.role === "admin";
-  console.log("===>", isAdmin);
+  const { user, logout, loading } = useUserStore();
+  const isAdmin = user && user.role === "admin";
 
   const { cart } = useCartStore();
   return (
@@ -17,7 +17,7 @@ const Navbar = () => {
         <div className="flex flex-wrap justify-between items-center">
           <Link
             to="/"
-            className="text-2xl font-bold text-emerald-400 items-center space-x-2 flex"
+            className="text-2xl font-bold text-emerald-400 mb-4 md:mb-0 items-center space-x-2 flex"
           >
             Easy Shop
           </Link>
@@ -53,14 +53,25 @@ const Navbar = () => {
                 <span className="hidden sm:inline">Dashboard</span>
               </Link>
             )}
+            {isAdmin && (
+              <Link
+                className="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md font-medium
+								 transition duration-300 ease-in-out flex items-center"
+                to={"/orders"}
+              >
+                <ListOrdered className="inline-block mr-1" size={18} />
+                <span className="hidden sm:inline">Orders</span>
+              </Link>
+            )}
 
             {user ? (
               <Button
                 size={"md"}
+                className="text-sm sm:text-base"
                 onClick={logout}
                 icon={<HiLogout size={18} />}
               >
-                Log Out
+                {loading ? "Logging out..." : "Logout"}
               </Button>
             ) : (
               <>

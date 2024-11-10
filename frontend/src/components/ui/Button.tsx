@@ -69,7 +69,7 @@ const Button: FC<ButtonProps> = ({
     type={type}
     disabled={disabled}
   >
-    {icon && <span className="mr-2">{icon}</span>}
+    {icon && <span className="mr-2 hidden sm:inline">{icon}</span>}
     {children}
   </button>
 );

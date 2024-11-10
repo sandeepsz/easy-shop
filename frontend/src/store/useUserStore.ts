@@ -19,6 +19,7 @@ interface AuthStore {
   login: (credentials: LoginCredentials) => Promise<void>;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
+  refreshToken: () => Promise<void>;
 }
 
 interface SignupCredentials {
@@ -33,7 +34,7 @@ interface LoginCredentials {
   password: string;
 }
 
-export const useUserStore = create<AuthStore>((set) => ({
+export const useUserStore = create<AuthStore>((set, get) => ({
   user: null,
   loading: false,
   checkingAuth: true,
@@ -91,7 +92,6 @@ export const useUserStore = create<AuthStore>((set) => ({
       }
     }
   },
-
   logout: async () => {
     try {
       await axios.post("/auth/logout");
@@ -115,7 +115,7 @@ export const useUserStore = create<AuthStore>((set) => ({
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response?.data?.message) {
-          toast.error(error.response?.data?.message);
+          console.log(error.response?.data?.message);
         } else {
           toast.error("An error occurred during signup");
         }
@@ -123,4 +123,46 @@ export const useUserStore = create<AuthStore>((set) => ({
       set({ checkingAuth: false, user: null });
     }
   },
+
+  refreshToken: async () => {
+    if (get().checkingAuth) return;
+    set({ checkingAuth: true });
+    try {
+      const response = await axios.post("/auth/refresh-token");
+      set({ checkingAuth: false });
+      return response.data;
+    } catch (error) {
+      set({ user: null, checkingAuth: false });
+      throw error;
+    }
+  },
 }));
+
+let refreshPromise = null;
+
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        if (refreshPromise!) {
+          await refreshPromise;
+          return axios(originalRequest);
+        }
+
+        refreshPromise = useUserStore.getState().refreshToken();
+        await refreshPromise;
+        refreshPromise = null;
+
+        return axios(originalRequest);
+      } catch (refreshError) {
+        useUserStore.getState().logout();
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);

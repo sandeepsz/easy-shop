@@ -8,6 +8,7 @@ import {
   getProductsByCategory,
   getRecommendedProducts,
   toggleFeaturedProduct,
+  getOrderProducts,
 } from "../controller/product.controller.js";
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.get("/", protectRoute, getAllProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/recommendations", getRecommendedProducts);
 router.get("/category/:category", getProductsByCategory);
+router.get("/orders", getOrderProducts);
 router.patch("/:id", protectRoute, adminRoute, toggleFeaturedProduct);
 router.delete("/:id", protectRoute, adminRoute, deleteProduct);
 

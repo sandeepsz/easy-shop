@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
-import { Trash, Star } from "lucide-react";
-import { useProductStore } from "./../store/useProductStore";
-import Button from "./ui/Button";
-import { cn } from "../lib/utils";
+import { useProductStore } from "../store/useProductStore";
+const OrdersPage = () => {
+  const { orders } = useProductStore();
+  console.log("======>", orders);
 
-const ProductsList = () => {
-  const { deleteProduct, toggleFeaturedProduct, products } = useProductStore();
   return (
     <motion.div
       className="bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto"
@@ -39,18 +37,24 @@ const ProductsList = () => {
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
             >
-              Featured
+              User
             </th>
             <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
             >
-              Actions
+              Order Id
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Action
             </th>
           </tr>
         </thead>
 
-        <tbody className="bg-gray-800 divide-y divide-gray-700">
+        {/* <tbody className="bg-gray-800 divide-y divide-gray-700">
           {products?.map((product) => (
             <tr key={product._id} className="hover:bg-gray-700">
               <td className="px-6 py-4 whitespace-nowrap">
@@ -100,9 +104,10 @@ const ProductsList = () => {
               </td>
             </tr>
           ))}
-        </tbody>
+        </tbody> */}
       </table>
     </motion.div>
   );
 };
-export default ProductsList;
+
+export default OrdersPage;

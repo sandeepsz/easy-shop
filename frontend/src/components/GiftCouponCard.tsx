@@ -6,9 +6,6 @@ const GiftCouponCard = () => {
   const [userInputCode, setUserInputCode] = useState("");
   const { coupon, isCouponApplied, applyCoupon, getMyCoupon, removeCoupon } =
     useCartStore();
-
-  console.log("coupon==============>", coupon);
-
   useEffect(() => {
     getMyCoupon();
   }, [getMyCoupon]);

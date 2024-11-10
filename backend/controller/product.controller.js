@@ -1,6 +1,7 @@
 import Product from "../models/product.modal.js";
 import cloudinary from "../lib/cloudinary.js";
 import { redis } from "../lib/redis.js";
+import Order from "../models/order.modal.js";
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -122,6 +123,16 @@ export const getProductsByCategory = async (req, res) => {
     res.json({ products });
   } catch (error) {
     console.log("Error in getProductsByCategory controller", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getOrderProducts = async (req, res) => {
+  try {
+    const products = await Order.find();
+    res.json({ products });
+  } catch (error) {
+    console.log("Error in order controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

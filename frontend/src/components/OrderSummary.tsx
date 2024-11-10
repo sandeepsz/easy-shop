@@ -3,12 +3,30 @@ import { useCartStore } from "./../store/useCartStore";
 import { Link } from "react-router-dom";
 import { MoveRight } from "lucide-react";
 import { useEffect } from "react";
-import axios from "../lib/axios";
 import toast from "react-hot-toast";
 
+export interface khaltiPayloadProps {
+  return_url: string | undefined;
+  website_url: string | undefined;
+  amount: number;
+  purchase_order_id: string;
+  purchase_order_name: string;
+  customer_info: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+}
+
 const OrderSummary = () => {
-  const { total, subtotal, coupon, isCouponApplied, calculateTotals } =
-    useCartStore();
+  const {
+    total,
+    subtotal,
+    coupon,
+    isCouponApplied,
+    calculateTotals,
+    createPayment,
+  } = useCartStore();
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = Number(total.toFixed(0));
@@ -16,28 +34,19 @@ const OrderSummary = () => {
 
   const handlePayment = async () => {
     try {
-      const payload = {
-        return_url: "http://localhost:5173/successful",
-        website_url: "http://localhost:5173/successful",
+      const khaltiPayload: khaltiPayloadProps = {
+        return_url: "https://easy-shop-dd7k.onrender.com/successful",
+        website_url: "https://easy-shop-dd7k.onrender.com",
         amount: formattedTotal,
         purchase_order_id: "testy",
         purchase_order_name: "test",
         customer_info: {
           name: "Sandip Nepali",
           email: "codesandip@gmail.com",
-          phone: "9800000123",
+          phone: "9821557346",
         },
       };
-      const res = await axios.post(
-        `http://localhost:8000/api/payment/khalti`,
-        payload,
-        {
-          withCredentials: true,
-        }
-      );
-
-      console.log("URLLLL", res?.data?.data?.payment_url);
-      window.location.href = res?.data?.data?.payment_url;
+      createPayment(khaltiPayload);
     } catch (error) {
       console.error("🍾🍾", error);
       toast.error("Something Went Wrong");

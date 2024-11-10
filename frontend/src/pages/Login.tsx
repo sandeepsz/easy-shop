@@ -2,7 +2,7 @@ import React from "react";
 import InputField from "../components/InputField";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { User, ArrowRight, Lock, Mail, Loader } from "lucide-react";
+import { User, ArrowRight, Lock, Mail, Loader2 } from "lucide-react";
 import Button from "../components/ui/Button";
 import { useState } from "react";
 import { useUserStore } from "../store/useUserStore";
@@ -10,9 +10,8 @@ import { useUserStore } from "../store/useUserStore";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const loading = false;
 
-  const { login } = useUserStore();
+  const { login, loading } = useUserStore();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login({ email, password });
@@ -41,7 +40,6 @@ const Login = () => {
                 <Mail className="h-5 w-5 text-gray-400" aria-hidden="true" />
               }
             />
-
             <InputField
               id="passsword"
               label="Password"
@@ -54,11 +52,10 @@ const Login = () => {
                 <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
               }
             />
-
             <Button disabled={loading} type="submit" width={"full"}>
               {loading ? (
                 <>
-                  <Loader
+                  <Loader2
                     className="mr-2 h-5 w-5 animate-spin"
                     aria-hidden="true"
                   />
@@ -71,6 +68,11 @@ const Login = () => {
                 </>
               )}
             </Button>
+            <p>For Demo(ADMIN):</p>
+            <p className="text-sm text-gray-400">
+              Email: easystore@gmail.com
+            </p>{" "}
+            <p className="text-sm text-gray-400">Password: easy@123!</p>
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-400">

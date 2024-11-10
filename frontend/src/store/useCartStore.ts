@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Product } from "./useProductStore";
 import axios, { isAxiosError } from "../lib/axios";
 import { toast } from "react-hot-toast";
+import { khaltiPayloadProps } from "../components/OrderSummary";
 
 interface Coupon {
   _id: string;
@@ -25,6 +26,7 @@ interface CartStore {
   getMyCoupon: () => void;
   removeCoupon: () => void;
   applyCoupon: (code: string) => void;
+  createPayment: (khaltiPayload: khaltiPayloadProps) => Promise<void>;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
@@ -152,5 +154,22 @@ export const useCartStore = create<CartStore>((set, get) => ({
     }
 
     set({ subtotal, total });
+  },
+
+  createPayment: async (khaltiPayload: khaltiPayloadProps) => {
+    try {
+      const res = await axios.post(`/payment/khalti`, khaltiPayload, {
+        withCredentials: true,
+      });
+      window.location.href = res.data.data.payment_url;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response?.data?.message) {
+          toast.error(error.response?.data?.message);
+        } else {
+          toast.error("An error occurred during signup");
+        }
+      }
+    }
   },
 }));

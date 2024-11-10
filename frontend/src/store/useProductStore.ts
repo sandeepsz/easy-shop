@@ -15,6 +15,7 @@ export interface Product {
 interface productStore {
   loading: boolean;
   products: Product[];
+  orders: Product[];
   setProducts: (products: Product[]) => void;
   createProduct: (productData: {
     name: string;
@@ -28,14 +29,14 @@ interface productStore {
   deleteProduct: (productId: string) => Promise<void>;
   fetchProductsByCategory: (category: string) => Promise<void>;
   fetchFeaturedProducts: () => Promise<void>;
+  fetchFetchOrders: () => Promise<void>;
 }
 
 export const useProductStore = create<productStore>((set) => ({
   products: [],
   loading: false,
-
+  orders: [],
   setProducts: (products) => set({ products }),
-
   createProduct: async (productData) => {
     set({ loading: true });
     try {
@@ -61,7 +62,6 @@ export const useProductStore = create<productStore>((set) => ({
     try {
       const response = await axios.get("/products");
       set({ products: response.data.products, loading: false });
-      toast.success(response?.data?.message);
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response?.data?.message) {
@@ -86,7 +86,6 @@ export const useProductStore = create<productStore>((set) => ({
         ),
         loading: false,
       }));
-      toast.success(response?.data?.message);
     } catch (error) {
       set({ loading: false });
       if (isAxiosError(error)) {
@@ -142,6 +141,21 @@ export const useProductStore = create<productStore>((set) => ({
     try {
       const response = await axios.get("/products/featured");
       set({ products: response.data, loading: false });
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response?.data?.message) {
+          toast.error(error.response?.data?.message);
+        } else {
+          toast.error("An error occurred during signup");
+        }
+      }
+    }
+  },
+  fetchFetchOrders: async () => {
+    set({ loading: true });
+    try {
+      const response = await axios.get("/products/orders");
+      set({ orders: response.data, loading: false });
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response?.data?.message) {
