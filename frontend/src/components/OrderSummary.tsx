@@ -35,8 +35,8 @@ const OrderSummary = () => {
   const handlePayment = async () => {
     try {
       const khaltiPayload: khaltiPayloadProps = {
-        return_url: "http://localhost:5173/successful",
-        website_url: "http://localhost:5173/",
+        return_url: "https://easy-shop-dd7k.onrender.com/successful",
+        website_url: "https://easy-shop-dd7k.onrender.com",
         amount: formattedTotal,
         purchase_order_id: "testy",
         purchase_order_name: "test",

@@ -13,7 +13,7 @@ const SuccessfulPage = () => {
     const confirmPaymentAndCreateOrder = async () => {
       try {
         const res = await axios.post(
-          `http://localhost:5173/api/payment/order`,
+          `https://easy-shop-dd7k.onrender.com/payment/order`,
           {
             products: cart,
             totalAmount: total,
