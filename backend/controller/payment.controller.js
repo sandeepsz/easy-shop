@@ -29,16 +29,11 @@ export const payment = async (req, res) => {
 
 export const order = async (req, res) => {
   const { products, totalAmount } = req.body;
-  console.log(products, totalAmount);
   const user = req.user;
   try {
     const newOrder = new Order({
       user: user,
-      products: products.map((product) => ({
-        product: product._id,
-        quantity: product.quantity,
-        price: product.price,
-      })),
+      products: products,
       totalAmount: totalAmount,
     });
 

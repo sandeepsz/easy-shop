@@ -9,23 +9,21 @@ import { Link } from "react-router-dom";
 const SuccessfulPage = () => {
   const { total, cart, removeFromCart } = useCartStore();
   const [orderId, setOrderId] = useState(null);
-  const formattedTotal = Number(total.toFixed(0));
-
   useEffect(() => {
     const confirmPaymentAndCreateOrder = async () => {
       try {
         const res = await axios.post(
-          `https://easy-shop-dd7k.onrender.com/api/payment/order`,
+          `http://localhost:5173/api/payment/order`,
           {
             products: cart,
-            totalAmount: formattedTotal,
-          },
-          { withCredentials: true }
+            totalAmount: total,
+          }
         );
-
         if (res.data.success) {
           setOrderId(res.data.data._id);
-          removeFromCart(res.data.data._id);
+          for (const item of cart) {
+            removeFromCart(item._id);
+          }
         } else {
           toast.error("Failed to create order");
         }
@@ -36,7 +34,7 @@ const SuccessfulPage = () => {
     };
 
     confirmPaymentAndCreateOrder();
-  }, [cart, formattedTotal]);
+  }, [cart, total]);
   return (
     <div className="h-screen flex items-center justify-center px-4">
       <Confetti

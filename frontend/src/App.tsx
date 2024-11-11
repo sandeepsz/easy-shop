@@ -16,15 +16,16 @@ import OrdersPage from "./pages/OrdersPage";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
-  const { getCartItems } = useCartStore();
+  const { getCartItems, cart } = useCartStore();
+  console.log(cart);
+
   useEffect(() => {
     checkAuth();
   }, []);
   useEffect(() => {
-    if (!user) return;
-
+    if (!user || cart.length > 0) return;
     getCartItems();
-  }, [getCartItems, user]);
+  }, [user]);
   if (checkingAuth) return <InitialLoader />;
 
   return (

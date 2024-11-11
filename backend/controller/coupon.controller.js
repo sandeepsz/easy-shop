@@ -5,8 +5,6 @@ export const getCoupon = async (req, res) => {
     const coupon = await Coupon.findOne({
       isActive: true,
     });
-
-    console.log("coupon on Backend-->", coupon);
     res.json(coupon || null);
   } catch (error) {
     console.log("Error in getCoupon controller", error.message);
